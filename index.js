@@ -30,11 +30,23 @@ const goToHome = () => {
     backButton.click()
 
 }
-chrome.storage.sync.get("color", ({ color }) => {
-    changeColor.style.backgroundColor = color;
-});
 
-// When the button is clicked, inject setPageBackgroundColor into current page
+
+
+const saveNamesAndRegistry = () => {
+    let table = document.getElementsByClassName("text-uppercase")[0].rows
+    let tableData = [];
+    for (let i=0; i<15; i++) {
+        let cells = table[i].cells
+        let cellData = {
+            name: cells[0].innerText,
+            registry: cells[1].innerText,
+        }
+        tableData.push(cellData)
+    }
+    // TODO : upload data to db
+}
+
 scrapDataButton.addEventListener("click", async () => {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
@@ -49,5 +61,13 @@ goBackButton.addEventListener("click", async() => {
     chrome.scripting.executeScript({
         target: { tabId: tab.id },
         function: goToHome,
+    });
+});
+
+saveNamesButton.addEventListener("click", async() => {
+    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        function: saveNamesAndRegistry,
     });
 });
