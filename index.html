@@ -1,14 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <link rel="stylesheet" href="index.css">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8; font-src 'self' data:;"/>
 </head>
 <body>
-<button id="scrapData"> Guarda datos de esta página </button>
+<button id="scrapData"> Guarda datos de esta página</button>
 <button id="backToHome"> Regresa a página principal</button>
-<button id="saveNamesInCurrent"> Guardar nombres y número de registro </button>
-<!--TODO: go to custom page with number input -->
+<button id="saveNamesInCurrent"> Guardar nombres y número de registro</button>
+<button id="scrapButton"> Continua descargando</button>
+<div class="pageSelect">
+    <input type="text" id="goToPageInput" placeholder="Número de página">
+        <button id="goToPageButton">
+            Ir
+        </button>
+    </input>
+</div>
 <script src="index.js"></script>
 
 </body>

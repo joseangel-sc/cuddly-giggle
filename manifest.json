@@ -1,0 +1,28 @@
+{
+  "name": "Scrapper mex gov",
+  "description": "REPSE (https://repse.stps.gob.mx/) scrap",
+  "version": "1.0",
+  "manifest_version": 3,
+  "content_scripts": [
+    {
+      "matches": [
+        "*://repse.stps.gob.mx/*"
+      ],
+      "js": ["index.js"],
+      "run_at": "document_end"
+    }],
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "images/icon.png"
+    }
+  },
+  "icons": {
+    "16": "images/icon.png"
+  }
+}
