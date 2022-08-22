@@ -24,5 +24,8 @@
   },
   "icons": {
     "16": "images/icon.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; script-src-elem 'self' 'unsafe-inline' http://localhost:81/;"
   }
 }

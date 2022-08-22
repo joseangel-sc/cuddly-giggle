@@ -3,7 +3,7 @@ let goBackButton = document.getElementById("backToHome")
 let saveNamesButton = document.getElementById("saveNamesInCurrent")
 let goToPageButton = document.getElementById("goToPageButton")
 // let targetPage = document.getElementById("goToPageInput")
-let targetPage = 4
+let targetPage = 9000
 
 
 const scrapData = () => {
@@ -24,7 +24,7 @@ const scrapData = () => {
     let municipality = getContent(xpathRoutes.municipality)
     let registry = getContent(xpathRoutes.registry)
     let services = getContent(xpathRoutes.services)
-    // TODO: call airtable API and send data
+
     console.log({name, municipality, registry, services})
 }
 
@@ -34,7 +34,6 @@ const goToHome = () => {
     backButton.click()
 
 }
-
 
 const saveNamesAndRegistry = (pageNumber) => {
     let table = document.getElementsByClassName("text-uppercase")[0].rows
@@ -52,7 +51,8 @@ const saveNamesAndRegistry = (pageNumber) => {
         const url = 'http://localhost:81/'
         const response = await fetch(url, {
             method: 'POST',
-            body: JSON.stringify(data)})
+            body: JSON.stringify(data)
+        })
         return response.json()
     }
     let dataToSend = {}
@@ -60,6 +60,16 @@ const saveNamesAndRegistry = (pageNumber) => {
     sendData(dataToSend)
 }
 
+const getCurrentPage = () => {
+    let activePageEl = document.getElementsByClassName('page-item active')[0]
+    return Number(activePageEl.innerText)
+}
+
+const getLastScrappedPageNumber = async () => {
+    const response = await fetch('http://localhost:81/last_scrapped');
+    const data = await response.json();
+    return data['length']
+}
 
 const scrapDataAction = () => {
     document.addEventListener("DOMContentLoaded", () => {
@@ -103,19 +113,18 @@ const goToPageAction = () => {
     // setTimeout(loadSettings, 10000)
     // document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("load", () => {
-            const getCurrentPage = () => {
-                let activePageEl = document.getElementsByClassName('page-item active')[0]
-                return Number(activePageEl.innerText)
-            }
 
 
-            const goNextPage = () => {
+            const goNextPage = async () => {
                 let curPage = getCurrentPage()
                 saveNamesAndRegistry(curPage)
                 let navVarEl = document.getElementsByClassName('page-link btnpage g-recaptcha')
                 console.log('going to next page')
 
                 let nextPageEl = navVarEl[navVarEl.length - 1]
+                let lastScrapped = await getLastScrappedPageNumber()
+                console.log(`Making the 'next' page button take us to the ${lastScrapped} page`)
+                nextPageEl.dataset.page = lastScrapped
                 nextPageEl.click()
 
 
