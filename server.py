@@ -14,6 +14,9 @@ CORS(app, support_credentials=True)
 def index():
     data = request.get_data()
     string_data = data.decode('utf-8')
+    if "NUM SA DE CV" in string_data:
+        print('skipping num 1')
+        return {1: 'OK'}
     data_dict = json.loads(string_data)
     with open('data.txt', 'a') as f:
         json.dump(data_dict, f)
@@ -28,6 +31,7 @@ def get_last_scrapped_data():
     with open('data.txt', 'r') as f:
         data = f.readlines()
     last_row_data = json.loads(data[-1])
-    return {'length': list(last_row_data.keys())[0]}
+    next_page = int(list(last_row_data.keys())[0]) + 1
+    return {'length': next_page}
 
 app.run(host='0.0.0.0', port=81, debug=True)

@@ -2,7 +2,6 @@ let scrapDataButton = document.getElementById("scrapData");
 let goBackButton = document.getElementById("backToHome")
 let saveNamesButton = document.getElementById("saveNamesInCurrent")
 let goToPageButton = document.getElementById("goToPageButton")
-// let targetPage = document.getElementById("goToPageInput")
 let targetPage = 9000
 
 
@@ -70,6 +69,7 @@ const getLastScrappedPageNumber = async () => {
     const data = await response.json();
     return data['length']
 }
+
 
 const scrapDataAction = () => {
     document.addEventListener("DOMContentLoaded", () => {
