@@ -1,7 +1,6 @@
 let scrapDataButton = document.getElementById("scrapData");
 let goBackButton = document.getElementById("backToHome")
 let saveNamesButton = document.getElementById("saveNamesInCurrent")
-let goToPageButton = document.getElementById("goToPageButton")
 let targetPage = 9000
 
 

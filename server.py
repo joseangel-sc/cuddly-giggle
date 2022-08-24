@@ -9,15 +9,40 @@ app = Flask(__name__)
 CORS(app, support_credentials=True)
 
 
+def get_last_detail_scraped():
+    with open('details.txt', 'r') as f:
+        read = f.readlines()
+    if len(read) == 0:
+        return 1, 0
+
+    data = json.loads(read[-1])
+    last_page = data['page']
+    last_row = data['row']
+
+    return last_page, last_row
+
+
+def get_next_registry(last_page, last_row):
+    with open('data.txt', 'r') as f:
+        data = f.readlines()
+    page = data[last_page-1]
+    page_dict = json.loads(page)
+    companies_list = page_dict[str(last_page)]
+    return companies_list[last_row]['registry']
+
+
 @app.route('/', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def index():
     data = request.get_data()
     string_data = data.decode('utf-8')
-    if "NUM SA DE CV" in string_data:
-        print('skipping num 1')
-        return {1: 'OK'}
     data_dict = json.loads(string_data)
+    if "1" in data_dict:
+        with open('data.txt', 'r') as f:
+            data = f.readlines()
+        if len(data) != 0:
+            print('skiping num 1, repeated sorry')
+            return {1: 'OK'}
     with open('data.txt', 'a') as f:
         json.dump(data_dict, f)
         f.write('\n')
@@ -34,4 +59,28 @@ def get_last_scrapped_data():
     next_page = int(list(last_row_data.keys())[0]) + 1
     return {'length': next_page}
 
-app.run(host='0.0.0.0', port=81, debug=True)
+
+@app.route('/post_details', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def post_details():
+    data = request.get_data()
+    string_data = data.decode('utf-8')
+    data_dict = json.loads(string_data)
+    with open('details.txt', 'a') as f:
+        json.dump(data_dict, f)
+        f.write('\n')
+
+    return {1: 'OK'}
+
+
+@app.route('/next_registry', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_next_registry_to_scrape():
+    last_page, last_row = get_last_detail_scraped()
+    next_registry = get_next_registry(last_page, last_row)
+    return {'registry': next_registry}
+
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=81, debug=True)
