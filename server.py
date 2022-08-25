@@ -25,10 +25,17 @@ def get_last_detail_scraped():
 def get_next_registry(last_page, last_row):
     with open('data.txt', 'r') as f:
         data = f.readlines()
+    pages_per_page = 14
+    next_page = last_page
+    next_row = last_row + 1
+    if last_row == pages_per_page:
+        next_row = 0
+        next_page += 1
     page = data[last_page-1]
     page_dict = json.loads(page)
     companies_list = page_dict[str(last_page)]
-    return companies_list[last_row]['registry']
+
+    return {"registry": companies_list[last_row]['registry'], "page": next_page, "row": next_row}
 
 
 @app.route('/', methods=['POST'])
@@ -44,7 +51,7 @@ def index():
             print('skiping num 1, repeated sorry')
             return {1: 'OK'}
     with open('data.txt', 'a') as f:
-        json.dump(data_dict, f)
+        json.dump(data_dict, f, ensure_ascii=False)
         f.write('\n')
 
     return {1: 'OK'}
@@ -67,7 +74,7 @@ def post_details():
     string_data = data.decode('utf-8')
     data_dict = json.loads(string_data)
     with open('details.txt', 'a') as f:
-        json.dump(data_dict, f)
+        json.dump(data_dict, f, ensure_ascii=False)
         f.write('\n')
 
     return {1: 'OK'}
@@ -77,8 +84,7 @@ def post_details():
 @cross_origin(supports_credentials=True)
 def get_next_registry_to_scrape():
     last_page, last_row = get_last_detail_scraped()
-    next_registry = get_next_registry(last_page, last_row)
-    return {'registry': next_registry}
+    return get_next_registry(last_page, last_row)
 
 
 
