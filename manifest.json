@@ -1,12 +1,12 @@
 {
-  "name": "Scrapper mex gov",
-  "description": "REPSE (https://repse.stps.gob.mx/) scrap",
+  "name": "GEXMAIL",
+  "description": "GEXMAIL (https://gmail.com/) scrap",
   "version": "1.0",
   "manifest_version": 3,
   "content_scripts": [
     {
       "matches": [
-        "*://repse.stps.gob.mx/*"
+        "*://gmail.com/*"
       ],
       "js": ["index.js"],
       "run_at": "document_end"

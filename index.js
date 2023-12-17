@@ -5,39 +5,40 @@ let targetPage = 9000
 let mode = 'details' // 'details' or 'companyList'
 
 
-const scrapAndSendDetails = async () => {
-    let xpathRoutes = {
-        name: '/html/body/div[3]/div[2]/div[1]/div/div[1]/div/p[2]',
-        municipality: '/html/body/div[3]/div[2]/div[1]/div/div[2]/div/p[2]',
-        registry: '/html/body/div[3]/div[2]/div[1]/div/div[3]/div/p[2]',
-        services: '/html/body/div[3]/div[2]/div[2]',
-        folio: '/html/body/div[3]/div[1]/div/div/h3'
-    }
+const scrapData = async () => {
+    const contentXpath = '/html/body/div[7]/div[3]/div/div[2]/div[2]/div/div/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[3]/div/div/div/div/div/div[1]/div[2]'
+    const subjectXpath =  '/html/body/div[7]/div[3]/div/div[2]/div[2]/div/div/div/div[2]/div/div[1]/div/div[2]/div/div[2]/div[1]/div/div[2]/div[1]/h2'
+    const senderMail = '/html/body/div[7]/div[3]/div/div[2]/div[2]/div/div/div/div[2]/div/div[1]/div/div[2]/div/div[2]/div[2]/div/div[3]/div/div/div/div/div/div[1]/div[2]/div[1]/table/tbody/tr[1]/td[1]/table/tbody/tr/td/h3/span/span[1]/span'
 
     const getContent = (xPath) => {
         let element = document.evaluate(xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE)
+        console.log(element.singleNodeValue.innerText)
         return element.singleNodeValue.innerText
     }
-    let data = {}
-    for (const key in xpathRoutes) {
-        data[key] = getContent(xpathRoutes[key])
-        console.log(`Scrapping ${key}`)
-    }
-    const detailsOfRegistry = await getNextRegistry()
-    let toSend = {}
-    toSend['page'] = detailsOfRegistry['page']
-    toSend['row'] = detailsOfRegistry['row']
-    toSend['registry'] = detailsOfRegistry['registry']
-    toSend['data'] = data
-
-    const url = 'http://localhost:81/post_details'
-    fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(toSend),
-        headers: {'Content-Type': 'application/json; charset=utf-8'}
-    }
-   )
+    const subject = getContent(subjectXpath)
+    const sender = getContent(senderMail)
+    const emailContent = getContent(contentXpath).split('---------- Forwarded message ---------\n')[0]
+    const prompt = `I will send an email here, 
+    from that email i need you to return a json 
+    with the following structure: {
+    “fecha_de_solicitud”: ‘19/12/23’, 
+    “#_cheque”: ‘2804’,
+    “empresa”: ‘FDX’ }
+    I will us this as a json, so your response should ONLY be a json, nothing else, nothing before, nothing after.
+    
+    the email content is: 
+    
+    ----START OF EMAIL CONTENT----
+    ${emailContent}    
+    
+    
+    ----END OF EMAIL CONTENT----
+    `
+    console.log({prompt})
+    const gp4Response = await sendPromptToGPT4(prompt)
+    console.log({gp4Response})
 }
+
 
 
 const goToHome = () => {
