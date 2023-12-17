@@ -7,16 +7,17 @@ let mode = 'details' // 'details' or 'companyList'
 
 const scrapData = async () => {
     const contentXpath = '/html/body/div[7]/div[3]/div/div[2]/div[2]/div/div/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[3]/div/div/div/div/div/div[1]/div[2]'
-    const subjectXpath =  '/html/body/div[7]/div[3]/div/div[2]/div[2]/div/div/div/div[2]/div/div[1]/div/div[2]/div/div[2]/div[1]/div/div[2]/div[1]/h2'
-    const senderMail = '/html/body/div[7]/div[3]/div/div[2]/div[2]/div/div/div/div[2]/div/div[1]/div/div[2]/div/div[2]/div[2]/div/div[3]/div/div/div/div/div/div[1]/div[2]/div[1]/table/tbody/tr[1]/td[1]/table/tbody/tr/td/h3/span/span[1]/span'
+    const subjectXpath = '/html/body/div[7]/div[3]/div/div[2]/div[2]/div/div/div/div[2]/div/div[1]/div/div/div/div[2]/div[1]/div/div[2]/div[1]/h2'
+    const senderXpath= '/html/body/div[7]/div[3]/div/div[2]/div[2]/div/div/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[3]/div/div/div/div/div/div[1]/div[2]/div[1]/table/tbody/tr[1]/td[1]/table/tbody/tr/td/h3/span/span[1]/span'
 
     const getContent = (xPath) => {
         let element = document.evaluate(xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE)
-        console.log(element.singleNodeValue.innerText)
         return element.singleNodeValue.innerText
     }
     const subject = getContent(subjectXpath)
-    const sender = getContent(senderMail)
+    console.log(subject)
+    const sender = getContent(senderXpath)
+    console.log(sender)
     const emailContent = getContent(contentXpath).split('---------- Forwarded message ---------\n')[0]
     const prompt = `I will send an email here, 
     from that email i need you to return a json 
