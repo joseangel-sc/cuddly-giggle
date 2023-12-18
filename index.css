@@ -1,12 +1,8 @@
 button {
     height: 30px;
-    width: 200px;
-    outline: none;
     margin: 10px;
-    border: none;
-    border-radius: 2px;
+    border-radius: 10px 5px 10px 5px;
 }
-k
 button.current {
     box-shadow: 0 0 0 2px white,
     0 0 0 4px black;
@@ -14,10 +10,11 @@ button.current {
 
 .pageSelect {
     display: flex;
-    width: 200px;
     align-items: center;
 }
 
 input {
     height: 30px;
+    width: 800px;
+    border-radius: 5px;
 }
