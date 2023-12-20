@@ -14,8 +14,7 @@
   "permissions": [
     "storage",
     "activeTab",
-    "scripting",
-    "*://api.justdecision.com/*"
+    "scripting"
   ],
   "host_permissions": [
     "*://api.justdecision.com/*"
