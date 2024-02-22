@@ -1,23 +1,25 @@
 {
-  "name": "GEXMAIL_V0.0.1",
-  "description": "GEXMAIL (https://gmail.com/) scrap",
+  "name": "DecisionLab",
+  "description": "DecisionLab all in one extension",
   "version": "1.0",
   "manifest_version": 3,
   "content_scripts": [
     {
-      "matches": [
-        "*://gmail.com/*"
-      ],
-      "js": ["index.js"],
-      "run_at": "document_end"
-    }],
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js", "index.js"],
+      "run_at": "document_idle"
+    }
+  ],
   "permissions": [
     "storage",
     "activeTab",
-    "scripting"
+    "scripting",
+    "tabs",
+    "notifications"
   ],
   "host_permissions": [
-    "*://api.justdecision.com/*"
+    "*://api.justdecision.com/*",
+    "<all_urls>"
   ],
   "action": {
     "default_popup": "index.html",
@@ -29,6 +31,6 @@
     "16": "images/icon.png"
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; script-src-elem 'self' 'unsafe-inline' https://api.openai.com; connect-src 'self' https://api.justdecision.com;"
+    "extension_pages": "script-src 'self'; object-src 'self'; script-src-elem 'self' 'unsafe-inline' https://api.openai.com; connect-src 'self' https://api.justdecision.com https://api.openai.com;" // Added OpenAI's API to connect-src
   }
 }
